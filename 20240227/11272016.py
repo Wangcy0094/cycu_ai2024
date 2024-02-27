@@ -37,3 +37,24 @@ for title in titles:
 
 
     print('---------------------------------------------')
+
+#天氣部分
+#https://www.cwa.gov.tw/rss/forecast/36_05.xml
+import requests
+from bs4 import BeautifulSoup
+
+# 獲取RSS feed
+response = requests.get('https://www.cwa.gov.tw/rss/forecast/36_05.xml')
+
+# 解析RSS feed
+soup = BeautifulSoup(response.content, 'xml')
+
+# 遍歷所有的項目
+for item in soup.find_all('item'):
+    # 提取日期
+    date = item.title.text.split(' ')[0]
+    
+    # 提取天氣預報
+    forecast = item.description.text
+    
+    print(f'日期：{date}，天氣預報：{forecast}')
