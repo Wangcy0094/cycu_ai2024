@@ -45,9 +45,18 @@ plt.ylabel('價格', fontproperties=font)
 # 設定圖例，並使用中文字體
 plt.legend(prop=font)
 
+
 # 設定 x 軸的刻度
 plt.xticks(df2['調價日期'][::len(df2)//10], rotation=45)
 
+# 反轉 x 軸的方向
+plt.gca().invert_xaxis()
+
+# 儲存圖片前調用 tight_layout
+plt.tight_layout()
+plt.savefig('oil_price.jpg')
+
+# 顯示圖片
 plt.show()
 
 # 將 DataFrame 輸出為 csv 檔
