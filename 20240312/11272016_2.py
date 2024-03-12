@@ -16,7 +16,7 @@ filepath = os.path.join(path ,excel_file)
 # 讀取 Excel 文件
 df = pd.read_excel(filepath, sheet_name='交通事故簡報通報資料')
 #篩選 欄位名稱 為'國道名稱'與'方向' 的資料， 我只要國道名稱為'國道3號'及方向為'南'及''南向'的資料
-df1 = df[(df['國道名稱'] == '國道3號') & (df['方向'].isin(['南', '南向']))]
+df1 = df[(df['國道名稱'] == '國道3號') & (df['方向'].isin(['北', '北向']))]
 
 #把 欄位 '年' '月' '日' '時' '分'
 #合併成一個欄位 '日期' , 並且轉換成日期格式
@@ -56,9 +56,9 @@ plt.xlabel('事件時間', fontproperties=font)
 plt.ylabel('里程', fontproperties=font)
 
 # 顯示標題為 '國道1號南' 的圖表
-plt.title('國道3號南向', fontproperties=font)
+plt.title('國道3號北向 學號:11272016', fontproperties=font)
 
 #匯出圖表，檔案名稱為"11272016_國道3號南.png"
-plt.savefig('11272016_國道3號南向.png')
+plt.savefig('11272016_國道3號北向.png')
 
 plt.show()
