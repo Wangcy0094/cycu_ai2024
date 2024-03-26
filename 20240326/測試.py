@@ -19,4 +19,4 @@ for i in range(24):
             df = pd.concat([df, df_temp])
 
 df.reset_index(drop=True, inplace=True)
-print(df.head())
+df.to_csv('output.csv', index=False)
