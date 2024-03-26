@@ -2,21 +2,24 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-base_url = "https://tisvcloud.freeway.gov.tw/history/TDCS/M04A/20240325/"
-df = pd.DataFrame()
+url = "https://tisvcloud.freeway.gov.tw/history/TDCS/M04A/20240325/"
 
-for i in range(24):
-    hour = str(i).zfill(2)  # 將數字轉換為兩位數的字串
-    url = base_url + hour + "/"
-    
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    
-    for link in soup.find_all("a"):
-        if link.get("href").endswith(".csv"):
-            csv_url = url + link.get("href")
-            df_temp = pd.read_csv(csv_url)
-            df = pd.concat([df, df_temp])
+filename = "TDCS_M04A_20240325_000000.csv"
 
-df.reset_index(drop=True, inplace=True)
-df.to_csv('output.csv', index=False)
+#filename 最後面的數字代表的是小時 分鐘 秒 ，例如000000代表00:00:00
+#000500代表00:05:00 以此類推
+#如果每5分鐘一筆資料，那麼一小時會有12筆資料
+#利用迴圈產生檔名清單
+#例如 TDCS_M04A_20240325_000000.csv , TDCS_M04A_20240325_000500.csv
+for i in range(0, 24):
+    for j in range(0, 60, 5):
+        filename = "TDCS_M04A_20240325_" + str(i).zfill(2) + str(j).zfill(2) + "00.csv"
+        print(filename)
+        url = "https://tisvcloud.freeway.gov.tw/history/TDCS/M04A/20240325/" + str(i).zfill(2) + "/"
+        url += filename
+        print(url)
+        response = requests.get(url)
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+            f.close()
+        print("Save", filename)
