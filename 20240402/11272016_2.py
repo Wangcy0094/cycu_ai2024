@@ -15,7 +15,6 @@ taiwan.plot()
 plt.xlim(118,122)
 plt.ylim(21,27)
 
-
 # 在地圖上標出對應的溫度
 for i, row in weather_data.iterrows():
     temp = row['Temperature']
@@ -23,6 +22,11 @@ for i, row in weather_data.iterrows():
     city_geom = taiwan.loc[taiwan['COUNTYNAME'] == row['City']].geometry.unary_union.centroid
     # 在繪製文字時使用設定的字體
     plt.text(city_geom.x-0.35, city_geom.y, f'{temp}', fontsize=8)
+
+# 設定 x 軸、y 軸的標籤和圖表的標題
+plt.xlabel('longitude')
+plt.ylabel('latitude')
+plt.title('11272016 Chen-Yu,Wang')
 
 plt.show()
 
