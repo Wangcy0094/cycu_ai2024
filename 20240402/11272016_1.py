@@ -20,6 +20,8 @@ import feedparser
 # url = https://www.cwa.gov.tw/rss/forecast/36_01.xml
 # 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, to 22
 
+data = []
+
 for num in range(1, 23):
     url = 'https://www.cwa.gov.tw/rss/forecast/36_' + str(num).zfill(2) + '.xml'
     response = requests.get(url)
@@ -49,6 +51,12 @@ for num in range(1, 23):
         else:
             temp = "未知溫度"
 
+        data.append([city, date, temp])
         print(city, date, temp)
     
     print("=======================================")
+# 將結果存入 DataFrame
+df = pd.DataFrame(data, columns=['City', 'Date', 'Temperature'])
+
+# 將 DataFrame 輸出成 CSV 文件
+df.to_csv('20240402/weather_data.csv', index=False)

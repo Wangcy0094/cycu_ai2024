@@ -6,7 +6,7 @@ import geopandas as gpd
 import pandas as pd
 
 #read shape file
-taiwan=gpd.read_file('20240402/county/county_moi_1090820.shp')
+taiwan=gpd.read_file('20240402/county/COUNTY_MOI_1090820.shp')
 import os
 #print cwd
 print (taiwan)
