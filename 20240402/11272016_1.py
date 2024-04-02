@@ -4,18 +4,51 @@
 #再來第二步要找這個縣市，今日的溫度狀況，例如在網址中有一段title是<![CDATA[ 臺北市04/02 今晚明晨 晴時多雲 溫度: 23 ~ 29 降雨機率: 10% (04/02 17:00發布) ]]>，
 #這段文字中有一個溫度: 23 ~ 29，這個就是我要的溫度狀況，而04/02為我要的時間
 #最後幫我把這個迴圈列出來的縣市名稱、時間、溫度狀況印出來，要分別對應到正確的縣市名稱、時間、溫度狀況
-import requests
+# crawler from rss of central weather agency
 import re
+import requests
 import xml.etree.ElementTree as ET
-for i in range(1,23):
-    url = 'https://www.cwa.gov.tw/rss/forecast/36_{:02d}.xml'.format(i)
-    res = requests.get(url)
-    root = ET.fromstring(res.text)
-    description = root.find('channel/item/description').text
-    title = root.find('channel/item/title').text
-    city = re.search('RSS 服務--(.+?)，', description).group(1)
-    temp = re.search('溫度: (.+?) 降雨機率', title).group(1)
-    time = re.search('(\d+/\d+)', title).group(1)
-    print(city, time, temp)
+import json
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import os
 
-#幫我把結果印出來，變成csv檔
+import feedparser
+
+# url = https://www.cwa.gov.tw/rss/forecast/36_01.xml
+# 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, to 22
+
+for num in range(1, 23):
+    url = 'https://www.cwa.gov.tw/rss/forecast/36_' + str(num).zfill(2) + '.xml'
+    response = requests.get(url)
+    feed = feedparser.parse(response.content)
+
+    for entry in feed.entries:
+        # 如果 entry.title 包含 "一週天氣預報"，則跳過這個 entry
+        if "一週天氣預報" in entry.title:
+            continue
+
+        city_match = re.search('^(.+?)\d', entry.title)
+        date_match = re.search('(\d+/\d+)', entry.title)
+        temp_match = re.search('溫度: (.+?) 降雨機率:', entry.title)
+
+        if city_match:
+            city = city_match.group(1)
+        else:
+            city = "未知城市"
+
+        if date_match:
+            date = date_match.group(1)
+        else:
+            date = "未知日期"
+
+        if temp_match:
+            temp = temp_match.group(1)
+        else:
+            temp = "未知溫度"
+
+        print(city, date, temp)
+    
+    print("=======================================")
