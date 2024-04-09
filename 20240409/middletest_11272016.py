@@ -1,14 +1,20 @@
-import requests
+import pandas as pd
 
-# The URL of the CSV file
-url = 'https://scweb.cwa.gov.tw/zh-tw/earthquake/csv/2024%E5%B9%B44%E6%9C%88'
+# 讀取CSV文件
+df = pd.read_csv('earthquake.csv', encoding='big5', skiprows=1)
 
-# Send a GET request to the URL
-response = requests.get(url)
+#確認有哪些columns
+#print(df.columns)
 
-# Make sure the request was successful
-response.raise_for_status()
+# 選取需要的列
+df = df[['地震時間', '經度', '緯度', '規模']]
 
-# Write the contents of the response to a CSV file
-with open('data.csv', 'wb') as f:
-    f.write(response.content)
+# 將地震時間轉換為datetime對象
+df['地震時間'] = pd.to_datetime(df['地震時間'])
+
+# 選取2024/4/3 07:58:09 AM到2024/4/9的數據
+start_date = pd.to_datetime('2024/4/3 07:58:09 AM')
+end_date = pd.to_datetime('2024/4/10')
+df = df[(df['地震時間'] >= start_date) & (df['地震時間'] < end_date)]
+
+df.to_csv('filtered_data.csv', index=False)
