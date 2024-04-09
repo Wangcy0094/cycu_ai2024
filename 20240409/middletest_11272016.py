@@ -48,3 +48,46 @@ for i, row in df.iterrows():
 
 # 保存地圖到 HTML 文件
 m.save('earthquake_map.html')
+
+print('---------------------------------')
+from ipyleaflet import Map, Marker, basemaps
+from folium.plugins import TimestampedGeoJson
+from datetime import datetime, timedelta
+import json
+
+# 創建一個以台灣為中心的地圖
+m = folium.Map(location=[23.8, 121], zoom_start=7)
+
+# 創建一個TimestampedGeoJson對象
+timestamped_geojson = TimestampedGeoJson(
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [row['經度'], row['緯度']],
+                },
+                "properties": {
+                    "times": [(datetime.now() + timedelta(days=i)).isoformat() for i in range(len(df))],
+                    "style": {"color": mcolors.to_hex(cmap(norm(row['規模'])))},
+                    "icon": "circle",
+                },
+            } for i, row in df.iterrows()
+        ],
+    },
+    period="PT1H",
+    add_last_point=True,
+    auto_play=False,
+    loop=False,
+    max_speed=1,
+    loop_button=True,
+    date_options='YYYY/MM/DD',
+    time_slider_drag_update=True,
+)
+
+m.add_child(timestamped_geojson)
+
+# 保存地圖到 HTML 文件
+m.save('earthquake_map2.html')
