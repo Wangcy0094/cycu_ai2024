@@ -20,30 +20,31 @@ df = df[(df['地震時間'] >= start_date) & (df['地震時間'] < end_date)]
 df.to_csv('filtered_data.csv', index=False)
 
 print('---------------------------------')
-#繪製台灣地圖
-import geopandas as gpd
-import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
+import folium
+import matplotlib.colors as mcolors
 
-# 讀取 shape file
-taiwan = gpd.read_file('20240402/county/COUNTY_MOI_1090820.shp')
-plt.xlim(118,122)
-plt.ylim(21,27)
+# 創建一個以台灣為中心的地圖
+m = folium.Map(location=[23.8, 121], zoom_start=7)
 
-#在地圖上標出地震的位置
+# 創建一個顏色映射
+cmap = mcolors.LinearSegmentedColormap.from_list("", ['lightblue', 'deepskyblue', 'yellow', 'orange', 'red'])
+norm = mcolors.Normalize(vmin=df['規模'].min(), vmax=df['規模'].max())
+
+# 在地圖上標出地震的位置
 for i, row in df.iterrows():
     # 獲取地震的經緯度
     lon, lat = row['經度'], row['緯度']
-    # 在地圖上標出地震的位置
-    plt.scatter(lon, lat, color='red', s=row['規模']*10)
-    plt.text(lon, lat, f'{row["規模"]}', fontsize=8)
+    # 創建一個彈出窗口，顯示地震的時間、經度、緯度和規模
+    popup = folium.Popup(f"時間: {row['地震時間']}<br>經度: {lon}<br>緯度: {lat}<br>規模: {row['規模']}", max_width=200)
+    # 在地圖上標出地震的位置，並添加彈出窗口
+    folium.CircleMarker(
+        location=[lat, lon],
+        radius=row['規模']*2,  # 設定圓點的大小
+        color=mcolors.to_hex(cmap(norm(row['規模']))),  # 根據規模選擇顏色
+        fill=True,
+        fill_color=mcolors.to_hex(cmap(norm(row['規模']))),  # 根據規模選擇顏色
+        popup=popup  # 添加彈出窗口
+    ).add_to(m)
 
-# 設定 x 軸、y 軸的標籤和圖表的標題
-plt.xlabel('longitude')
-plt.ylabel('latitude')
-plt.title('11272016 Chen-Yu,Wang')
-
-plt.show()
-
-# 保存到 PNG 文件
-plt.savefig('earthquake_map.png')
+# 保存地圖到 HTML 文件
+m.save('earthquake_map.html')
