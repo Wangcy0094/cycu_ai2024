@@ -633,7 +633,7 @@
         var urlImg = "/images/earthquakeIcon.png";
         var locale = 'zh-TW';
         var eArea = '小區域有感地震';
-        var pageViews = 335229;
+        var pageViews = 336781;
 
                                 var locations = [
                 ['2024040918420332', '', '2024-04-09 18:42:03', 3.2, 8.7, '花蓮縣政府北北東方  27.5  公里 (位於臺灣東部海域)', '2', '121.7577', '24.2045'],
