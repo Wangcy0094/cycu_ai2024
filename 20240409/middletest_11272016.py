@@ -58,6 +58,9 @@ import json
 # 創建一個以台灣為中心的地圖
 m = folium.Map(location=[23.8, 121], zoom_start=7)
 
+# 指定開始時間
+start_time = datetime.strptime('2024/4/3 7:58', '%Y/%m/%d %H:%M')
+
 # 創建一個TimestampedGeoJson對象
 timestamped_geojson = TimestampedGeoJson(
     {
@@ -70,7 +73,7 @@ timestamped_geojson = TimestampedGeoJson(
                     "coordinates": [row['經度'], row['緯度']],
                 },
                 "properties": {
-                    "times": [(datetime.now() + timedelta(days=i)).isoformat() for i in range(len(df))],
+                    "times": [(start_time + timedelta(days=i)).isoformat(), (start_time + timedelta(days=i+1)).isoformat()],
                     "style": {"color": mcolors.to_hex(cmap(norm(row['規模'])))},
                     "icon": "circle",
                 },
