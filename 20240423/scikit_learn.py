@@ -37,15 +37,14 @@ print(X_test)
 
 # 創建SVM分類器實例，這裡使用預設的核函數（RBF核）
 model = SVC(kernel='rbf', decision_function_shape='ovo')
-print('----------------')
-print(X_test)
 
 # 訓練模型
 model.fit(X_train, y_train)
 
 # 進行預測
 y_pred = model.predict(X_test)
-
+print('----------------')
+print(y_pred)
 # 計算準確率
 accuracy = accuracy_score(y_test, y_pred)
 
