@@ -13,6 +13,7 @@ print(X)
 print('----------------')
 print(y)
 print('----------------')
+
 # 切分數據集為訓練集和測試集
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
@@ -29,8 +30,15 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+print('----------------')
+print(X_train)
+print('----------------')
+print(X_test)
+
 # 創建SVM分類器實例，這裡使用預設的核函數（RBF核）
 model = SVC(kernel='rbf', decision_function_shape='ovo')
+print('----------------')
+print(X_test)
 
 # 訓練模型
 model.fit(X_train, y_train)
