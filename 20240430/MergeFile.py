@@ -18,10 +18,12 @@ df1['時間'] = pd.to_datetime(df1['時間']).dt.hour * 12 + pd.to_datetime(df1[
 
 # 篩選和修改里程列
 df1['里程'] = df1['里程'].apply(lambda x: int(x[3:7]) if x.startswith('01') else None)
+# 篩選出開頭為'01'的行，並刪除不符合條件的行
+df2 = df2[df2['里程1'].apply(lambda x: str(x).startswith('01'))]
 # 篩選和修改里程列DF2
 df2['里程1'] = df2['里程1'].apply(lambda x: int(x[3:7]) if x.startswith('01') else None)
-# 篩選第四行中包含數字31的值DF2
-df2.iloc[3] = df2.iloc[3].apply(lambda x: x if '31' in str(x) else None)
+# 篩選出'車種'列中包含數字31的行
+df2 = df2[df2['車種'].apply(lambda x: '31' in str(x))]
 
 # 修改南北向列
 df1['南北向'] = df1['南北向'].apply(lambda x: 1 if x == 'N' else (2 if x == 'S' else None))
