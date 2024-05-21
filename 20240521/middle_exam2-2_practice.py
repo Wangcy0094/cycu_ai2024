@@ -36,7 +36,9 @@ m = folium.Map(location=[25.033903, 121.564509], zoom_start=12)
 # 繪製所有車輛類型為31的車輛的平均速度
 for index, row in df.iterrows():
     if row['VehicleType'] == '31':
-        folium.Marker([float(row['GantryFrom'].split('K')[1]), float(row['GantryFrom'].split('K')[0])], popup=f"Space Mean Speed: {row['SpaceMeanSpeed']}").add_to(m)
+        gantry_from_parts = row['GantryFrom'].split('K')
+        if len(gantry_from_parts) >= 2:
+            folium.Marker([float(gantry_from_parts[1]), float(gantry_from_parts[0])], popup=f"Space Mean Speed: {row['SpaceMeanSpeed']}").add_to(m)
 
 # 將地圖保存為一個HTML文件
 m.save(os.path.join('midexam_practice', '20240429_M05A31.html'))
