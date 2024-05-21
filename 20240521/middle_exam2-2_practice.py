@@ -26,3 +26,17 @@ all_rows = [row for row in all_rows if row[3] == '31']
 # 將所有行轉換為 DataFrame
 df = pd.DataFrame(all_rows, columns=['TimeInterval', 'GantryFrom', 'GantryTo', 'VehicleType', 'SpaceMeanSpeed', 'Traffic'])
 print(df)
+
+#接著做一個動態地圖，將所有的車輛類型為31的車輛的平均速度繪製在地圖上，並且將這個地圖命名為20240429_M05A31.html，最後將這個地圖放到midexam_practice資料夾底下
+import folium
+
+# 創建一個地圖對象
+m = folium.Map(location=[25.033903, 121.564509], zoom_start=12)
+
+# 繪製所有車輛類型為31的車輛的平均速度
+for index, row in df.iterrows():
+    if row['VehicleType'] == '31':
+        folium.Marker([float(row['GantryFrom'].split('K')[1]), float(row['GantryFrom'].split('K')[0])], popup=f"Space Mean Speed: {row['SpaceMeanSpeed']}").add_to(m)
+
+# 將地圖保存為一個HTML文件
+m.save(os.path.join('midexam_practice', '20240429_M05A31.html'))
